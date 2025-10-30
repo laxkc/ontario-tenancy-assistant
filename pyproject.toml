@@ -1,0 +1,28 @@
+[project]
+name = "iot"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "aiomysql>=0.3.2",
+    "chainlit>=0.1.0",
+    "cryptography>=46.0.3",
+    "fastapi>=0.120.2",
+    "greenlet>=3.2.4",
+    "langchain>=0.3.27",
+    "langchain-community>=0.3.31",
+    "langchain-core>=0.3.79",
+    "langchain-pinecone>=0.2.12",
+    "langgraph>=1.0.1",
+    "numpy>=2.3.4",
+    "pinecone>=7.3.0",
+    "pydantic[email]>=2.12.3",
+    "python-dotenv>=1.2.1",
+    "ruff>=0.14.2",
+    "sentence-transformers>=5.1.2",
+    "sqlalchemy>=2.0.44",
+    "tqdm>=4.67.1",
+    "unstructured[docx,local-inference]>=0.18.15",
+    "uvicorn>=0.38.0",
+]
