@@ -12,13 +12,20 @@ import sys
 import json
 from pathlib import Path
 
-# Add current directory to path for imports
+# Add paths for imports
 sys.path.insert(0, str(Path(__file__).parent))
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from parsers.docx_parser import parse_legal_document
 from parsers.post_processor import post_process_document
 from parsers.enhancer import enhance_document
-import config
+from data.config import (
+    INPUT_DOCX,
+    OUTPUT_DIR,
+    OUTPUT_RAW,
+    OUTPUT_CLEAN,
+    OUTPUT_FINAL,
+)
 
 
 def main(input_file=None):
@@ -28,18 +35,18 @@ def main(input_file=None):
     if input_file:
         input_path = Path(input_file)
     else:
-        input_path = config.INPUT_DOCX
+        input_path = INPUT_DOCX
 
     if not input_path.exists():
         print(f"❌ Error: Input file not found: {input_path}")
-        print(f"\nExpected location: {config.INPUT_DOCX}")
+        print(f"\nExpected location: {INPUT_DOCX}")
         return 1
 
     print("=" * 70)
     print("🏛️  LEGAL DOCUMENT PARSER - Modular Pipeline")
     print("=" * 70)
     print(f"\n📄 Input:  {input_path}")
-    print(f"📁 Output: {config.OUTPUT_DIR}/")
+    print(f"📁 Output: {OUTPUT_DIR}/")
     print()
 
     # Stage 1: Parse DOCX
@@ -49,10 +56,10 @@ def main(input_file=None):
         document = parse_legal_document(str(input_path))
 
         # Save raw output
-        with open(config.OUTPUT_RAW, "w", encoding="utf-8") as f:
+        with open(OUTPUT_RAW, "w", encoding="utf-8") as f:
             json.dump(document, f, indent=2, ensure_ascii=False)
 
-        print(f"✓ Raw parse complete: {config.OUTPUT_RAW.name}")
+        print(f"✓ Raw parse complete: {OUTPUT_RAW.name}")
         print(f"  - Parts: {len(document['parts'])}")
         print(f"  - Sections: {sum(len(p['sections']) for p in document['parts'])}")
 
@@ -65,10 +72,10 @@ def main(input_file=None):
     print("-" * 70)
     try:
         document = post_process_document(
-            str(config.OUTPUT_RAW),
-            str(config.OUTPUT_CLEAN)
+            str(OUTPUT_RAW),
+            str(OUTPUT_CLEAN)
         )
-        print(f"✓ Post-processing complete: {config.OUTPUT_CLEAN.name}")
+        print(f"✓ Post-processing complete: {OUTPUT_CLEAN.name}")
 
     except Exception as e:
         print(f"❌ Error during post-processing: {e}")
@@ -79,10 +86,10 @@ def main(input_file=None):
     print("-" * 70)
     try:
         document = enhance_document(
-            str(config.OUTPUT_CLEAN),
-            str(config.OUTPUT_FINAL)
+            str(OUTPUT_CLEAN),
+            str(OUTPUT_FINAL)
         )
-        print(f"✓ Enhancement complete: {config.OUTPUT_FINAL.name}")
+        print(f"✓ Enhancement complete: {OUTPUT_FINAL.name}")
 
     except Exception as e:
         print(f"❌ Error during enhancement: {e}")
@@ -101,8 +108,8 @@ def main(input_file=None):
     print(f"   Estimated Tokens: {document['metadata']['estimated_total_tokens']:,}")
 
     print(f"\n🎯 Use this file for RAG:")
-    print(f"   📁 {config.OUTPUT_FINAL}")
-    print(f"   📦 Size: {config.OUTPUT_FINAL.stat().st_size / 1024:.1f} KB")
+    print(f"   📁 {OUTPUT_FINAL}")
+    print(f"   📦 Size: {OUTPUT_FINAL.stat().st_size / 1024:.1f} KB")
 
     print("\n🚀 Ready for:")
     print("   • Vector database ingestion (Pinecone/pgvector)")
