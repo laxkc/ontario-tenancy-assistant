@@ -1,30 +1,32 @@
+"""Main application entry point integrating FastAPI and Chainlit."""
 from fastapi import FastAPI
-from contextlib import asynccontextmanager
-from src.routes.user import router as user_router
-from src.db.config import Base, engine
+from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
+from chainlit.utils import mount_chainlit
 
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    # Startup
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-    yield
-    # Shutdown
-    await engine.dispose()
+from src.api.routes import router as api_router
 
+# Initialize FastAPI app
 app = FastAPI(
-    title="IoT API",
-    description="API for the IoT project",
-    lifespan=lifespan
+    title="AI Agent for Tenancies",
+    description="Backend API with integrated Chainlit chat interface",
+    version="1.0.0"
 )
 
-# Include routers
-app.include_router(user_router)
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Configure appropriately for production
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-@app.get("/")
-async def test():
-    return {"message": "API is running successfully"}
+# Include API routes
+app.include_router(api_router, prefix="/api", tags=["api"])
+
+# Mount Chainlit app
+mount_chainlit(app=app, target="src/web/app.py", path="/chainlit")
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=False)

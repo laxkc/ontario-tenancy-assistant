@@ -3,12 +3,8 @@
 from typing import List
 from langchain_core.embeddings import Embeddings
 from sentence_transformers import SentenceTransformer
-import sys
-from pathlib import Path
 
-# Add parent directory to path for config import
-sys.path.append(str(Path(__file__).parent.parent))
-import config
+from rag import config
 
 
 class BGEEmbeddings(Embeddings):

@@ -4,12 +4,8 @@ from langchain_openai import ChatOpenAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
-import sys
-from pathlib import Path
 
-# Add parent directory to path for config import
-sys.path.append(str(Path(__file__).parent.parent))
-import config
+from rag import config
 from .retriever import get_retriever
 
 
