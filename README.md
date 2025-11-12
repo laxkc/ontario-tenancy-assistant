@@ -10,6 +10,10 @@ An intelligent assistant for Ontario residential tenancy law, powered by RAG (Re
 - **Interactive Chat Interface**: Chainlit-based web interface for natural conversation
 - **REST API**: FastAPI backend for programmatic access
 
+## Demo Video
+
+https://github.com/user-attachments/assets/521f20cc-df4f-437d-b5d2-940268de0a75
+
 ## Requirements
 
 - Python 3.13+
