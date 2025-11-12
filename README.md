@@ -150,3 +150,4 @@ python scripts/upsert_to_pinecone.py
 - **Web Framework**: FastAPI
 - **Chat Interface**: Chainlit
 - **Document Processing**: PyPDF2, python-docx, unstructured
+# laxkc-ontario-tenancy-assistant
